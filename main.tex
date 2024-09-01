@@ -19,7 +19,7 @@
 
 \graphicspath{{../static/}}
 
-% ACÁ TERMINA LA PRIMERA CARILLA 
+% ACÁ TERMINA LA PRIMERA CARILLA.
 
 \begin{document}
 
@@ -35,16 +35,17 @@ A partir de una lista de ciudades, devuelve aquellas que tienen más de 50.000 h
 
 \vspace{2mm}  % DEJO 2mm de espacio VERTICAL (por eso 'V'space). Si quieren dejar espacio en horizontal usan hspace{}
 
-\begin{proc}{grandesCiudades}{\In ciudades : \TLista{Ciudad}}{\TLista{Ciudad}}
+\begin{proc}{grandesCiudades}{\In \textit{ciudades} : \TLista{\textit{Ciudad}}}{\TLista{\textit{Ciudad}}}
 	\requiere{True}
-	\asegura{todasMayoresA50k(res) = True} 
+	\asegura{\paraTodo[unalinea]{i}{\ent}{0 \leq i < |res| \implicaLuego res[i] \in ciudades) \land todasMayoresA50k(res)}} 
 \end{proc}
 
 
 \vspace{2mm}
 
-\pred{todasMayoresA50k}{ciudades : \TLista{Ciudad}}{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |ciudades|) \implicaLuego ciudades[i][1] > 50000}}
-% ¡¡IMPORTANTE!!! Es necesario indexar DOS VECES la lista 'ciudades' porque como dice el tp, está compuesta por TUPLAS < nombre, #habitantes>                                                                                                           
+\pred{todasMayoresA50k}{ciudades : \TLista{Ciudad}}
+{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |ciudades|) \implicaLuego ciudades[i].habitantes > 50000}}
+% ¡¡IMPORTANTE!!! Es necesario indexar DOS VECES la lista 'ciudades' porque como dice el tp, está compuesta por TUPLAS < nombre, #habitantes>  REVISAR ESTO:                                                                                                          
 
 \vspace{4mm}
 
@@ -54,10 +55,75 @@ Por cuestiones de planificación urbana, las ciudades registran sus habitantes m
 
 \vspace{2mm}
 
-\begin{proc}{sumaDeHabitantes}{\In menoresDeCiudades : \TLista{Ciudad}, \In mayoresDeCiudades: \TLista{Ciudad}}{\TLista{Ciudad}}
+\begin{proc}{sumaDeHabitantes}{\In \textit{menoresDeCiudades} : \TLista{\textit{Ciudad}}, \In \textit{mayoresDeCiudades}: \TLista{\textit{Ciudad}}}{\TLista{\textit{Ciudad}}}
+	\requiere{\paraTodo[unalinea]{i}{\ent}{0\leq i< |menoresDeCiudades|\implicaLuego menoresDeCiudades[i].nombre = mayoresDeCiudades[i].nombre) \land (|menoresDeCiudades| = |mayoresDeCiudades|)}}
+	\asegura{\paraTodo[unalinea]{i}{\ent}{0 \leq i < |res| \implicaLuego res[i].habitates = menoresDeCiudades[i].habitantes + mayoresDeCiudades[i].habitantes}} 
+\end{proc}
+
+\vspace{4mm}
+
+\subsection{hayCamino}
+
+ Un mapa de ciudades está conformada por ciudades y caminos que unen a algunas de ellas. A partir de este mapa, podemos definir las distancias entre ciudades como una matriz donde cada celda i, j representa la distancia entre la ciudad i y la ciudad j. Una distancia de 0 equivale a no haber camino entre i y j. Notar que la distancia de una ciudad hacia sí misma es cero y la distancia entre A y B es la misma que entre B y A.
+ 
+ Dadas dos ciudades y una matriz de distancias, se pide determinar si existe un camino entre ambas ciudades
+ 
+ \vspace{2mm}
+ 
+ \begin{proc}{hayCamino}{\In \textit{distancias} : \TLista{\TLista{\ent}}, \In \textit{desde}: \ent, \In \textit{hasta}: \ent}{Bool}
 	\requiere{}
 	\asegura{} 
 \end{proc}
+
+\vspace{4mm}
+
+\subsection{cantidadCaminosNSaltos}
+
+ Dentro del contexto de redes informáticas, nos interesa contar la cantidad de “saltos” que realizan los paquetes de datos, donde un salto se define como pasar por un nodo.
+
+Así como definimos la matriz de distancias, podemos definir la matriz de conexión entre nodo , donde cada celda i, j tiene un 1 si hay un único camino a un salto de distancia entre el nodo i y el nodo j, y un 0 en caso contrario. En este caso, se trata de una matriz de conexión de orden 1, ya que indica cuáles pares de nodos poseen 1 camino entre ellos a 1 salto de distancia.
+
+Dada la matriz de conexión de orden 1, este procedimineto debe obtener aquella de orden n que indica cuántos caminos de n saltos hay entre los distintos nodos. Notar que la multiplicación de una matriz de conexión de orden 1 consigo misma nos da la matriz de conexión de orden 2, y así sucesivamente.
+
+ \vspace{2mm}
+ 
+ \begin{proc}{cantidadCaminosNSaltos}{\Inout \textit{conexión} : \TLista{\TLista{\ent}}, \In \textit{n}: \ent}{}
+	\requiere{}
+	\asegura{} 
+\end{proc}
+
+\vspace{4mm}
+
+\subsection{caminoMínimo}
+
+ Dada una matriz de distancias, una ciudad de origen y una ciudad de destino, este procedimiento debe devolver la lista de ciudades que conforman el camino más corto entre ambas. En caso de no existir un camino, se debe devolver una lista vacía.
+
+ \vspace{2mm}
+
+ \begin{proc}{caminoMínimo}{\In \textit{origen} : \ent, \In \textit{destino}: \ent, \In \textit{distancias}: \TLista{\TLista{\ent}}}{\TLista{\ent}}
+	\requiere{}
+	\asegura{} 
+\end{proc}
+
+
+
+\vspace{8mm}
+
+
+
+\section{Demostraciones de correctitud}
+
+La función \textbf{poblaciónTotal} recibe una lista de ciudades donde al menos una de ellas es grande (es decir, supera los 50.000 habitantes) y devuelve la cantidad total de habitantes. Dada la siguiente especificación:
+
+\vspace{2mm}
+
+ \begin{proc}{poblaciónTotal}{\In \textit{ciudades} : \TLista{\textit{Ciudad}}}{\ent}
+	\requiere{\existe[unalinea]{i}{\ent}{0 \leq i < |\textit{ciudades}| \yLuego \textit{ciudades}[i].\textit{habitantes} > 50.000}}
+	\asegura{} 
+\end{proc}
+
+
+
 
 
 \vspace{3cm}
