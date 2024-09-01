@@ -1,0 +1,88 @@
+\documentclass[10pt,a4paper]{article}
+
+\input{AEDmacros}
+\usepackage{caratula} % Version modificada para usar las macros de algo1 de ~> https://github.com/bcardiff/dc-tex
+
+
+    \titulo{Trabajo práctico 1: Especificación y WP}
+\subtitulo{"En búsqueda del camino"}
+
+\fecha{\today}
+
+\materia{Algoritmos y Estructuras de Datos}
+\grupo{Grupo NRO}
+
+    \integrante{Roko, Tomás Esteban}{262/23}{tomas.e.roko@gmail.com}
+\integrante{Nyari, Lisandro Rafael}{773/24}{lisandronyari@gmail.com}
+\integrante{Apellido, Nombre3}{003/01}{email3@dominio.com}
+\integrante{Apellido, Nombre4}{004/01}{email4@dominio.com}
+
+\graphicspath{{../static/}}
+
+% ACÁ TERMINA LA PRIMERA CARILLA 
+
+\begin{document}
+
+% ACÁ ARRANCA LA 2DA CARILLA
+
+\maketitle
+
+\section{Especificación}
+
+\subsection{grandesCiudades}
+
+A partir de una lista de ciudades, devuelve aquellas que tienen más de 50.000 habitantes.
+
+\vspace{2mm}  % DEJO 2mm de espacio VERTICAL (por eso 'V'space). Si quieren dejar espacio en horizontal usan hspace{}
+
+\begin{proc}{grandesCiudades}{\In ciudades : \TLista{Ciudad}}{\TLista{Ciudad}}
+	\requiere{True}
+	\asegura{todasMayoresA50k(res) = True} 
+\end{proc}
+
+
+\vspace{2mm}
+
+\pred{todasMayoresA50k}{ciudades : \TLista{Ciudad}}{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |ciudades|) \implicaLuego ciudades[i][1] > 50000}}
+% ¡¡IMPORTANTE!!! Es necesario indexar DOS VECES la lista 'ciudades' porque como dice el tp, está compuesta por TUPLAS < nombre, #habitantes>                                                                                                           
+
+\vspace{4mm}
+
+\subsection{sumaDeHabitantes}
+
+Por cuestiones de planificación urbana, las ciudades registran sus habitantes mayores de edad por un lado y menores de edad por el otro. Dadas dos listas de ciudades del mismo largo con los mismos nombres, una con sus habitantes mayores y otra con sus habitantes menores, este procedimiento debe devolver una lista de ciudades con la cantidad total de sus habitantes.
+
+\vspace{2mm}
+
+\begin{proc}{sumaDeHabitantes}{\In menoresDeCiudades : \TLista{Ciudad}, \In mayoresDeCiudades: \TLista{Ciudad}}{\TLista{Ciudad}}
+	\requiere{}
+	\asegura{} 
+\end{proc}
+
+
+\vspace{3cm}
+
+
+\subsection*{Macros de la cátedra para especificar(CON ESTAS DE BASE NOSOTROS NOS ARMAMOS NUESTRAS PRED, AUX, PROD)}
+
+\begin{proc}{nombre}{\In paramIn : \nat, \Inout paramInout : \TLista{\ent}}{tipoRes}
+	%    \modifica{parametro1, parametro2,..}
+	\requiere{expresionBooleana1}
+	\asegura{expresionBooleana2}
+	\aux{auxiliar1}{parametros}{tipoRes}{expresion}
+	\pred{pred1}{parametros}{expresion} 
+\end{proc}
+
+\aux{auxiliarSuelto}{parametros}{tipoRes}{expresion}
+% \paraTodo{variable}{tipo}{expresion}
+% \existe{variable}{tipo}{expresion}
+% Pueden tener [unalinea] para que no se divida en varias lineas
+\pred{predSuelto}{parametros}{\paraTodo[unalinea]{variable}{tipo}{algo \implicaLuego expresion}}
+\pred{predSuelto}{parametros}{\existe[unalinea]{variable}{tipo}{algo \yLuego expresion}}
+
+
+
+\vspace{10cm}
+
+
+\end{document}
