@@ -37,8 +37,14 @@ A partir de una lista de ciudades, devuelve aquellas que tienen más de 50.000 h
 
 \begin{proc}{grandesCiudades}{\In \textit{ciudades} : \TLista{\textit{Ciudad}}}{\TLista{\textit{Ciudad}}}
 	\requiere{True}
-	\asegura{\paraTodo[unalinea]{i}{\ent}{0 \leq i < |res| \implicaLuego res[i] \in ciudades) \land todasMayoresA50k(res)}} 
+	\asegura{todosPertenecen(res,ciudades) \land todasMayoresA50k(res)} 
 \end{proc}
+
+\vspace{2mm}
+
+\pred{todosPertenecen}{ciudades1:\TLista{Ciudad},ciudades2:\TLista{Ciudad}}{\paraTodo{n}{Ciudad}{(n $\in$ ciudades1\implicaLuego n  $\in$ ciudades2)}}
+
+
 
 
 \vspace{2mm}
@@ -72,7 +78,8 @@ Por cuestiones de planificación urbana, las ciudades registran sus habitantes m
  
  \begin{proc}{hayCamino}{\In \textit{distancias} : \TLista{\TLista{\ent}}, \In \textit{desde}: \ent, \In \textit{hasta}: \ent}{Bool}
 	\requiere{}
-	\asegura{} 
+	\asegura{\existe{s}{\TLista{\ent}}{s[0] = desde $\land$ s[|s| - 1] = hasta}
+	\yLuego \paraTodo{i}{\ent}{(0 < i < |s|) \implicaLuego (distancias[s[i]][s[i-1]]$\neq$0)}}
 \end{proc}
 
 \vspace{4mm}
@@ -144,7 +151,7 @@ La función \textbf{poblaciónTotal} recibe una lista de ciudades donde al menos
 % \existe{variable}{tipo}{expresion}
 % Pueden tener [unalinea] para que no se divida en varias lineas
 \pred{predSuelto}{parametros}{\paraTodo[unalinea]{variable}{tipo}{algo \implicaLuego expresion}}
-\pred{predSuelto}{parametros}{\existe[unalinea]{variable}{tipo}{algo \yLuego expresion}}
+\pred{predSuelto}{parametros}{\existe[]{variable}{tipo}{algo \yLuego expresion}}
 
 
 
