@@ -14,8 +14,8 @@
 
     \integrante{Roko, Tomás Esteban}{262/23}{tomas.e.roko@gmail.com}
 \integrante{Nyari, Lisandro Rafael}{773/24}{lisandronyari@gmail.com}
-\integrante{Apellido, Nombre3}{003/01}{email3@dominio.com}
-\integrante{Apellido, Nombre4}{004/01}{email4@dominio.com}
+\integrante{Braslavsky, Lautaro}{827/22}{lautybras@gmail.com}
+\integrante{Quintana, Joaquin Ezequiel}{1356/23}{joaquin32flores@gmail.com}
 
 \graphicspath{{../static/}}
 
@@ -34,26 +34,33 @@
 A partir de una lista de ciudades, devuelve aquellas que tienen más de 50.000 habitantes.
 
 \vspace{2mm}  % DEJO 2mm de espacio VERTICAL (por eso 'V'space). Si quieren dejar espacio en horizontal usan hspace{}
+ 
+%       EJERCICIO 1:
 
+
+% faltaria revisar casos borde, en particular lista vacía ¿tiene sentido devolver una lista vacía?
 \begin{proc}{grandesCiudades}{\In \textit{ciudades} : \TLista{\textit{Ciudad}}}{\TLista{\textit{Ciudad}}}
 	\requiere{True}
-	\asegura{todosPertenecen(res,ciudades) \land todasMayoresA50k(res)} 
+	\asegura{\paraTodo[unalinea]{i}{\ent}{0 \leq i < |ciudades| \implicaLuego (ciudades[i] \in res \Iff ciudades[i].habitantes > 50000)} \land \\
+	\hspace*{1.6cm} \paraTodo[unalinea]{j}{\ent}{0 \leq j < |res| \implicaLuego res[i] \in ciudades}} 
 \end{proc}
 
-\vspace{2mm}
-
-\pred{todosPertenecen}{ciudades1:\TLista{Ciudad},ciudades2:\TLista{Ciudad}}{\paraTodo{n}{Ciudad}{(n $\in$ ciudades1\implicaLuego n  $\in$ ciudades2)}}
-
+% \pred{todasMayoresA50k}{ciudades : \TLista{Ciudad}}
+% {\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |ciudades|) \implicaLuego ciudades[i].habitantes > 50000}}
 
 
-
-\vspace{2mm}
-
-\pred{todasMayoresA50k}{ciudades : \TLista{Ciudad}}
-{\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |ciudades|) \implicaLuego ciudades[i].habitantes > 50000}}
 % ¡¡IMPORTANTE!!! Es necesario indexar DOS VECES la lista 'ciudades' porque como dice el tp, está compuesta por TUPLAS < nombre, #habitantes>  REVISAR ESTO:                                                                                                          
 
+
+\vspace{2mm}
+
+%       EJERCICIO 2:
+
+
+
 \vspace{4mm}
+
+
 
 \subsection{sumaDeHabitantes}
 
@@ -61,12 +68,19 @@ Por cuestiones de planificación urbana, las ciudades registran sus habitantes m
 
 \vspace{2mm}
 
+
 \begin{proc}{sumaDeHabitantes}{\In \textit{menoresDeCiudades} : \TLista{\textit{Ciudad}}, \In \textit{mayoresDeCiudades}: \TLista{\textit{Ciudad}}}{\TLista{\textit{Ciudad}}}
-	\requiere{\paraTodo[unalinea]{i}{\ent}{0\leq i< |menoresDeCiudades|\implicaLuego menoresDeCiudades[i].nombre = mayoresDeCiudades[i].nombre) \land (|menoresDeCiudades| = |mayoresDeCiudades|)}}
-	\asegura{\paraTodo[unalinea]{i}{\ent}{0 \leq i < |res| \implicaLuego res[i].habitates = menoresDeCiudades[i].habitantes + mayoresDeCiudades[i].habitantes}} 
+	\requiere{\paraTodo[unalinea]{i}{\ent}{0\leq i< |menoresDeCiudades|\implicaLuego menoresDeCiudades[i].nombre = \newline \hspace*{1.7cm} mayoresDeCiudades[i].nombre) \land (|menoresDeCiudades| = |mayoresDeCiudades|)}}
+	\asegura{\paraTodo[unalinea]{i}{\ent}{0 \leq i < |res| \implicaLuego res[i].habitantes = menoresDeCiudades[i].habitantes +\newline \hspace*{1.6cm} mayoresDeCiudades[i].habitantes}} 
 \end{proc}
 
+
+\pred{sinRepetir}{ciudades: \TLista{\textit{Ciudad}}}{\paraTodo[unalinea]{i,j}{\ent}{0 \leq i < |ciudades| \land i \neq j \implicaLuego ciudades[i].\textit{nombre} \neq ciudades[j].\textit{nombre}}}
+
+
 \vspace{4mm}
+
+%       EJERCICIO 3:
 
 \subsection{hayCamino}
 
@@ -75,14 +89,28 @@ Por cuestiones de planificación urbana, las ciudades registran sus habitantes m
  Dadas dos ciudades y una matriz de distancias, se pide determinar si existe un camino entre ambas ciudades
  
  \vspace{2mm}
+
  
- \begin{proc}{hayCamino}{\In \textit{distancias} : \TLista{\TLista{\ent}}, \In \textit{desde}: \ent, \In \textit{hasta}: \ent}{Bool}
-	\requiere{}
-	\asegura{\existe{s}{\TLista{\ent}}{s[0] = desde $\land$ s[|s| - 1] = hasta}
-	\yLuego \paraTodo{i}{\ent}{(0 < i < |s|) \implicaLuego (distancias[s[i]][s[i-1]]$\neq$0)}}
+\begin{proc}{hayCamino}{\In \textit{distancias} : \TLista{\TLista{\ent}}, \In \textit{desde}: \ent, \In \textit{hasta}: \ent}{Bool}
+	\requiere{matrizCuadradaYSimetrica(distancias) \land 0 \leq desde < |distancias| \land 0 \leq hasta < |distancias|}
+	\asegura{res = true \Iff \existe[unalinea]{s}{\TLista{\ent}}{ |s| > 1 \land s[0] = desde \land s[|s| - 1] = hasta \land \\ 
+	\hspace*{1.6cm}\paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \implicaLuego 0 \leq s[j] < |distancias|}} \yLuego \\ 
+    \hspace*{1.6cm} \paraTodo[unalinea]{i}{\ent}{(0 < i < |s|) \implicaLuego (distancias[s[i]][s[i-1]] \neq 0)}}
 \end{proc}
 
+\pred{matrizCuadradaYSimetrica}{\textit{matriz}: \TLista{\TLista{\ent}}}{
+\paraTodo[unalinea]{i}{\ent}{0 \leq i < |matriz| \implicaLuego |matriz[i]| = |matriz|} \yLuego \\
+\paraTodo[unalinea]{j,k}{\ent}{0 \leq j,k < |matriz| \implicaLuego matriz[i][j] = matriz[j][i]}
+}
+
+%ARREGLAR
+%\pred{matrizCuadradaYSimetrica}{\textit{matriz}: \TLista{\TLista{\ent}}}{\paraTodo[unalinea]{i}{\ent}{0 \leq i < |matriz| \implicaLuego |matriz[i]| = |matriz| \land \paraTodo[unaLinea]{j,k}{\ent}{0 \leq j,k < |matriz| \implicaLuego matriz[i][j] = matriz[j][i]}}
+
+
+
 \vspace{4mm}
+
+%       EJERCICIO 4:
 
 \subsection{cantidadCaminosNSaltos}
 
@@ -94,12 +122,16 @@ Dada la matriz de conexión de orden 1, este procedimineto debe obtener aquella 
 
  \vspace{2mm}
  
- \begin{proc}{cantidadCaminosNSaltos}{\Inout \textit{conexión} : \TLista{\TLista{\ent}}, \In \textit{n}: \ent}{}
-	\requiere{}
-	\asegura{} 
-\end{proc}
+ \pred{soloUnosyCeros}{matriz: \TLista{\TLista{\ent}}}{\paraTodo[unalinea]{i,j}{\ent}{0 \leq i,j < |matriz| \implicaLuego matriz[i][j] = 0 \lor matriz[i][j] = 1}}
+ 
+ %%\begin{proc}{cantidadCaminosNSaltos}{\Inout \textit{conexión} : \TLista{\TLista{\ent}}, \In \textit{n}: \ent}{}
+%	\requiere{}
+%	\asegura{} 
+%\end{proc}
 
 \vspace{4mm}
+
+%       EJERCICIO 5:
 
 \subsection{caminoMínimo}
 
@@ -108,9 +140,17 @@ Dada la matriz de conexión de orden 1, este procedimineto debe obtener aquella 
  \vspace{2mm}
 
  \begin{proc}{caminoMínimo}{\In \textit{origen} : \ent, \In \textit{destino}: \ent, \In \textit{distancias}: \TLista{\TLista{\ent}}}{\TLista{\ent}}
-	\requiere{}
-	\asegura{} 
+	\requiere{matrizCuadradaYSimetrica(distancias) \land 0 \leq desde < |distancias| \land 0 \leq hasta < |distancias|}
+	\asegura{esCamino(distancias,res,desde,hasta) \yLuego \paraTodo[unalinea]{s}{\TLista{\ent}}{esCamino(distancias,s,desde,hasta) \implicaLuego \\ \hspace*{1.5cm} sumarDistancias(distancias,s) \leq sumarDistancias(distancias,res)}}
 \end{proc}
+
+\pred{esCamino}{distancias: \TLista{\TLista{\ent}},s: \TLista{\ent}, desde: \ent, hasta: \ent}{
+(|s| > 1 \land s[0] = desde \land s[|s| - 1] = hasta \land \paraTodo[unalinea]{j}{\ent}{0 \leq j < |s| \implicaLuego 0 \leq s[j] < |distancias|} \yLuego \\ \paraTodo[unalinea]{i}{\ent}{(0 < i < |s|) \implicaLuego (distancias[s[i]][s[i-1]] \neq 0))}
+}
+
+\aux{sumarDistancias}{distancias: \TLista{\TLista{\ent}}, s: \TLista{\ent}}{\ent}{
+ \sum_{i=0}^{|\textit{distancias}|-2} distancias[s[i]][s[i+1]]
+}
 
 
 
@@ -124,11 +164,42 @@ La función \textbf{poblaciónTotal} recibe una lista de ciudades donde al menos
 
 \vspace{2mm}
 
+
  \begin{proc}{poblaciónTotal}{\In \textit{ciudades} : \TLista{\textit{Ciudad}}}{\ent}
-	\requiere{\existe[unalinea]{i}{\ent}{0 \leq i < |\textit{ciudades}| \yLuego \textit{ciudades}[i].\textit{habitantes} > 50.000}}
-	\asegura{} 
+	\requiere{
+		\existe[unalinea]{i}{\ent}{0 \leq i < |\textit{ciudades}| \land \textit{ciudades}[i].\textit{habitantes} > 50,000} \land \\
+        \hspace*{1.75cm} \paraTodo[unalinea]{i}{\ent}{0 \leq i < |\textit{ciudades}| \implicaLuego \textit{ciudades}[i].\textit{habitantes} \geq 0} \land \\
+        \hspace*{1.75cm} \paraTodo[unalinea]{i,j}{\ent}{0 \leq i < |\textit{ciudades}| \land 0 \leq j < |\textit{ciudades}| \implicaLuego \textit{ciudades}[i].\textit{nombre} \neq \textit{ciudades}[j].\textit{nombre}}
+	}
+	\vspace{1.5mm}
+	
+	\asegura{res = \sum_{i=0}^{|\textit{ciudades}|-1} \textit{ciudades}[i].\textit{habitantes}} 
+
 \end{proc}
 
+\vspace{2mm}
+
+Con la siguiente implementación:
+
+\begin{verbatim}
+            res = 0
+            i = 0
+            while (i < ciudades.length) do
+                res = res + ciudades[i].habitantes
+                i = i + 1
+            endwhile
+\end{verbatim}
+
+\begin{enumerate}
+    \item Demostrar que la implementación es correcta con respecto a la especificación.
+    \item Demostrar que el valor devuelto es mayor a 50.000.
+\end{enumerate}
+%|s| > 1 ∧ s[0] = desde ∧ s[|s| − 1] = hasta ∧
+%(∀j : Z) (0 ≤ j < |s| −→L 0 ≤ s[j] < |distancias|)) ∧L
+%(∀i : Z) ((0 < i < |s|) −→L (distancias[s[i]][s[i − 1]] 6 = 0))}
+
+\subsection{}
+\subsection{}
 
 
 
@@ -151,7 +222,7 @@ La función \textbf{poblaciónTotal} recibe una lista de ciudades donde al menos
 % \existe{variable}{tipo}{expresion}
 % Pueden tener [unalinea] para que no se divida en varias lineas
 \pred{predSuelto}{parametros}{\paraTodo[unalinea]{variable}{tipo}{algo \implicaLuego expresion}}
-\pred{predSuelto}{parametros}{\existe[]{variable}{tipo}{algo \yLuego expresion}}
+\pred{predSuelto}{parametros}{\existe[unalinea]{variable}{tipo}{algo \yLuego expresion}}
 
 
 
