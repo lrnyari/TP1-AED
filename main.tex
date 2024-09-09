@@ -70,15 +70,18 @@ Por cuestiones de planificación urbana, las ciudades registran sus habitantes m
 
 
 \begin{proc}{sumaDeHabitantes}{\In \textit{menoresDeCiudades} : \TLista{\textit{Ciudad}}, \In \textit{mayoresDeCiudades}: \TLista{\textit{Ciudad}}}{\TLista{\textit{Ciudad}}}
-	\requiere{\paraTodo[unalinea]{i}{\ent}{0\leq i< |menoresDeCiudades|\implicaLuego menoresDeCiudades[i].nombre = \newline \hspace*{1.7cm} mayoresDeCiudades[i].nombre) \land (|menoresDeCiudades| = |mayoresDeCiudades|)}}
-	\asegura{\paraTodo[unalinea]{i}{\ent}{0 \leq i < |res| \implicaLuego res[i].habitantes = menoresDeCiudades[i].habitantes +\newline \hspace*{1.6cm} mayoresDeCiudades[i].habitantes}} 
+	\requiere{sinRepetir(menoresDeCiudades) \land sinRepetir(mayoresDeCiudades) \land \\ 
+	(|menoresDeCiudades| = |mayoresDeCiudades|) \land \paraTodo[unalinea]{i}{\nat}{0 \leq i < |menoresDeCiudades| \implicaLuego \existe[unalinea]{j}{\nat}{0 \leq j < |mayoresDeCiudades| \yLuego menoresDeCiudades[i].nombre = mayoresDeCiudades[j].nombre}}}
+	\vspace*{3mm}
+	\asegura{ sinRepetir(res) \land (|res| = |menoresDeCiudades|) \land \paraTodo[unalinea]{i}{\ent}{(0 \leq i < |res|) \implicaLuego \existe[unalinea]{j,k}{\ent}{ 0 \leq j,k < |res| \yLuego res[i].nombre = menoresDeCiudades[j].nombre \land res[i].nombre = mayoresDeCiudades[k].nombre \land res[i].habitantes = menoresDeCiudades[i].habitantes +  mayoresDeCiudades[i].habitantes}} } 
 \end{proc}
 
 
-\pred{sinRepetir}{ciudades: \TLista{\textit{Ciudad}}}{\paraTodo[unalinea]{i,j}{\ent}{0 \leq i < |ciudades| \land i \neq j \implicaLuego ciudades[i].\textit{nombre} \neq ciudades[j].\textit{nombre}}}
+\pred{sinRepetir}{ciudades: \TLista{\textit{Ciudad}}}{\paraTodo[unalinea]{i,j}{\ent}{(0 \leq i < |ciudades| \land i \neq j) \implicaLuego ciudades[i].\textit{nombre} \neq ciudades[j].\textit{nombre}}}
 
-
-\vspace{4mm}
+%\paraTodo[unalinea]{i}{\ent}{(0 \leq i < |res|) \implicaLuego (\exist {j,k}{\ent}) {( 0 \leq j,k < |res|) \yLuego res[i].nombre = menoresDeCiudades[j].nombre \land res[i].nombre = mayoresDeCiudades[k].nombre \land res[i].habitantes = menoresDeCiudades[i].habitantes +  mayoresDeCiudades[i].habitantes}} 
+ 
+ \vspace{4mm}
 
 %       EJERCICIO 3:
 
@@ -120,14 +123,27 @@ Así como definimos la matriz de distancias, podemos definir la matriz de conexi
 
 Dada la matriz de conexión de orden 1, este procedimineto debe obtener aquella de orden n que indica cuántos caminos de n saltos hay entre los distintos nodos. Notar que la multiplicación de una matriz de conexión de orden 1 consigo misma nos da la matriz de conexión de orden 2, y así sucesivamente.
 
- \vspace{2mm}
+\vspace{2mm}
  
- \pred{soloUnosyCeros}{matriz: \TLista{\TLista{\ent}}}{\paraTodo[unalinea]{i,j}{\ent}{0 \leq i,j < |matriz| \implicaLuego matriz[i][j] = 0 \lor matriz[i][j] = 1}}
+\pred{esCuadrada}{matriz: \TLista{\TLista{\ent}}}{\paraTodo[unalinea]{i,j}{\ent}{0 \leq i,j < |matriz| \implicaLuego (|matriz[i]| = |matriz[j]|) \land (|matriz| = |matriz[0]|)}}
  
- %%\begin{proc}{cantidadCaminosNSaltos}{\Inout \textit{conexión} : \TLista{\TLista{\ent}}, \In \textit{n}: \ent}{}
-%	\requiere{}
-%	\asegura{} 
-%\end{proc}
+\pred{listaDeMatricesCuadradas}{matrices: \TLista{\TLista{\TLista{\ent}}}}{\paraTodo[unalinea]{i,j}{\ent}{0 \leq i,j < |matrices| \implicaLuego (esCuadrada(matrices[i]) \land esCuadrada(matrices[j]) \land |matrices[i]| = |matrices[j]|)}}
+ 
+\pred{soloUnosyCeros}{matriz: \TLista{\TLista{\ent}}}{\paraTodo[unalinea]{i,j}{\ent}{0 \leq i,j < |matriz| \implicaLuego matriz[i][j] = 0 \lor matriz[i][j] = 1}}
+
+\aux{productoMatrices}{matriz1: \TLista{\TLista{\ent}}, matriz2: \TLista{\TLista{\ent}}}{\TLista{\TLista{\ent}}}{\paraTodo [unalinea] {i,j}{\ent}{(0 \leq i < |matriz1|) \land (0 \leq j < |matriz2[0]|) \implicaLuego res[i][j] = \sum_{k=0}^{|matriz1[0]|-1} matriz1[i][k] \cdot matriz2[k][j]}} 
+ 
+% \aux{auxiliarSuelto}{parametros}{tipoRes}{expresion}
+ 
+\vspace{2mm}
+ 
+\begin{proc}{cantidadCaminosNSaltos}{\Inout \textit{conexión} : \TLista{\TLista{\ent}}, \In \textit{n}: \ent}{}
+	\requiere{conexion = A0 \land matrizCuadradaYSimetrica(conexion) \land soloUnosyCeros(conexion) }
+	\asegura{\existe[unalinea]{s}{\TLista{\TLista{\TLista{\ent}}}}{|s| = n \land listaDeMatricesCuadradas(s) \land s[0] = A0 \yLuego \\ 
+	\hspace*{1.5cm} (\paraTodo[unalinea]{i}{\ent}{0 < i < |s| \implicaLuego s[i] = productoMatrices(s[i-1], A0)) \yLuego s[|s|-1] = conexion}}} 
+\end{proc}
+
+
 
 \vspace{4mm}
 
