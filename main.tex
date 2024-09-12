@@ -1,7 +1,51 @@
 \documentclass[10pt,a4paper]{article}
-
+\usepackage{amssymb}
 \input{AEDmacros}
 \usepackage{caratula} % Version modificada para usar las macros de algo1 de ~> https://github.com/bcardiff/dc-tex
+
+%%%%%%%%%%%%%%%% MACROS NUESTRAS
+
+\newcommand{\ciu}{
+\textit{ciudades}
+}
+
+\newcommand{\hab}{
+\textit{habitantes}
+}
+
+\newcommand{\nom}{
+\textit{nombres}
+}
+
+\newcommand{\invariante}{
+    $(0 \leq i \leq |\textit{ciudades}| \yLuego res = \sum_{j=0}^{i-1} \textit{ciudades}[j].\textit{habitantes})$}
+
+\newcommand{\P}{
+    $(\existe[unalinea]{i}{\ent}{0 \leq i < |\textit{ciudades}| \land \textit{ciudades}[i].\textit{habitantes} > 50,000} \land \\
+        \hspace*{1.75cm} \paraTodo[unalinea]{i}{\ent}{0 \leq i < |\textit{ciudades}| \implicaLuego \textit{ciudades}[i].\textit{habitantes} \geq 0} \land \\
+        \hspace*{1.75cm} \paraTodo[unalinea]{i,j}{\ent}{0 \leq i < |\textit{ciudades}| \land 0 \leq j < |\textit{ciudades}| \implicaLuego \textit{ciudades}[i].\textit{nombre} \neq \textit{ciudades}[j].\textit{nombre}})$
+    }
+
+\newcommand{\Q}{
+    $(res = \sum_{i=0}^{|ciudades|-1}ciudades[i].\textit{habitantes})$
+    }
+
+\newcommand{\Pc}{
+    $(res = 0 \land i = 0)$
+}
+
+\newcommand{\Qc}{
+    $(res = \sum_{i=0}^{|ciudades|-1}ciudades[i].\textit{habitantes})$
+}
+
+\newcommand{\B}{
+    (i < |\ciu|)
+}
+
+\newcommand{\fvariante}{
+    (|\ciu| - i)
+}
+%%%%%%%%%%%%%%%% FIN DE LAS MACROS
 
 
     \titulo{Trabajo práctico 1: Especificación y WP}
@@ -71,9 +115,9 @@ Por cuestiones de planificación urbana, las ciudades registran sus habitantes m
 
 \begin{proc}{sumaDeHabitantes}{\In \textit{menoresDeCiudades} : \TLista{\textit{Ciudad}}, \In \textit{mayoresDeCiudades}: \TLista{\textit{Ciudad}}}{\TLista{\textit{Ciudad}}}
 	\requiere{sinRepetir(menoresDeCiudades) \land sinRepetir(mayoresDeCiudades) \land \\ 
-	(|menoresDeCiudades| = |mayoresDeCiudades|) \land \paraTodo[unalinea]{i}{\nat}{0 \leq i < |menoresDeCiudades| \implicaLuego \existe[unalinea]{j}{\nat}{0 \leq j < |mayoresDeCiudades| \yLuego menoresDeCiudades[i].nombre = mayoresDeCiudades[j].nombre}}}
+	(|menoresDeCiudades| = |mayoresDeCiudades|) \land \\ \paraTodo[unalinea]{i}{\nat}{0 \leq i < |menoresDeCiudades| \implicaLuego \existe[unalinea]{j}{\nat}{0 \leq j < |mayoresDeCiudades| \yLuego menoresDeCiudades[i].nombre = mayoresDeCiudades[j].nombre}}}
 	\vspace*{3mm}
-	\asegura{ sinRepetir(res) \land (|res| = |menoresDeCiudades|) \land \paraTodo[unalinea]{i}{\ent}{(0 \leq i < |res|) \implicaLuego \existe[unalinea]{j,k}{\ent}{ 0 \leq j,k < |res| \yLuego res[i].nombre = menoresDeCiudades[j].nombre \land res[i].nombre = mayoresDeCiudades[k].nombre \land res[i].habitantes = menoresDeCiudades[i].habitantes +  mayoresDeCiudades[i].habitantes}} } 
+	\asegura{ sinRepetir(res) \land (|res| = |menoresDeCiudades|) \land \paraTodo[unalinea]{i}{\ent}{0 \leq i < |res| \implicaLuego \existe[unalinea]{j,k}{\ent}{ 0 \leq j,k < |res| \yLuego res[i].nombre = menoresDeCiudades[j].nombre \land res[i].nombre = mayoresDeCiudades[k].nombre \land res[i].habitantes = menoresDeCiudades[i].habitantes +  mayoresDeCiudades[i].habitantes}} } 
 \end{proc}
 
 
@@ -106,6 +150,10 @@ Por cuestiones de planificación urbana, las ciudades registran sus habitantes m
 \paraTodo[unalinea]{j,k}{\ent}{0 \leq j,k < |matriz| \implicaLuego matriz[i][j] = matriz[j][i]}
 }
 
+\pred{matrizPositiva}{matriz: \TLista{\TLista{\ent}}}{
+\paraTodo[unalinea]{i,j}{\ent}{0 \leq i,j < |matriz| \yLuego matriz[i][j] \geq 0}
+}
+
 %ARREGLAR
 %\pred{matrizCuadradaYSimetrica}{\textit{matriz}: \TLista{\TLista{\ent}}}{\paraTodo[unalinea]{i}{\ent}{0 \leq i < |matriz| \implicaLuego |matriz[i]| = |matriz| \land \paraTodo[unaLinea]{j,k}{\ent}{0 \leq j,k < |matriz| \implicaLuego matriz[i][j] = matriz[j][i]}}
 
@@ -125,7 +173,9 @@ Dada la matriz de conexión de orden 1, este procedimineto debe obtener aquella 
 
 \vspace{2mm}
  
-\pred{esCuadrada}{matriz: \TLista{\TLista{\ent}}}{\paraTodo[unalinea]{i,j}{\ent}{0 \leq i,j < |matriz| \implicaLuego (|matriz[i]| = |matriz[j]|) \land (|matriz| = |matriz[0]|)}}
+\pred{esCuadrada}{matriz: \TLista{\TLista{\ent}}}{\paraTodo[unalinea]{i}{\ent}{0 \leq i < |matriz| \implicaLuego |matriz[i]| = |matriz|}}
+
+\pred{esSimetrica}{matriz: \TLista{\TLista{\ent}}}{\paraTodo[unalinea]{i,j}{\ent}{0 \leq i,j < |matriz| \implicaLuego matriz[i][j] = matriz[j][i]}}
  
 \pred{listaDeMatricesCuadradas}{matrices: \TLista{\TLista{\TLista{\ent}}}}{\paraTodo[unalinea]{i,j}{\ent}{0 \leq i,j < |matrices| \implicaLuego (esCuadrada(matrices[i]) \land esCuadrada(matrices[j]) \land |matrices[i]| = |matrices[j]|)}}
  
@@ -138,7 +188,7 @@ Dada la matriz de conexión de orden 1, este procedimineto debe obtener aquella 
 \vspace{2mm}
  
 \begin{proc}{cantidadCaminosNSaltos}{\Inout \textit{conexión} : \TLista{\TLista{\ent}}, \In \textit{n}: \ent}{}
-	\requiere{conexion = A0 \land matrizCuadradaYSimetrica(conexion) \land soloUnosyCeros(conexion) }
+	\requiere{1 \leq n \land conexion = A0 \land esCuadrada(conexion) \land esSimetrica(conexion) \land soloUnosyCeros(conexion) }
 	\asegura{\existe[unalinea]{s}{\TLista{\TLista{\TLista{\ent}}}}{|s| = n \land listaDeMatricesCuadradas(s) \land s[0] = A0 \yLuego \\ 
 	\hspace*{1.5cm} (\paraTodo[unalinea]{i}{\ent}{0 < i < |s| \implicaLuego s[i] = productoMatrices(s[i-1], A0)) \yLuego s[|s|-1] = conexion}}} 
 \end{proc}
@@ -214,8 +264,200 @@ Con la siguiente implementación:
 %(∀j : Z) (0 ≤ j < |s| −→L 0 ≤ s[j] < |distancias|)) ∧L
 %(∀i : Z) ((0 < i < |s|) −→L (distancias[s[i]][s[i − 1]] 6 = 0))}
 
+%%    ACÁ ARRANCAMOS EL 2.1
 \subsection{}
+
+\subsubsection*{Definiciones:}
+
+$I$ =\invariante
+
+\vspace{2mm}
+
+$P = \Big(\existe[unalinea]{i}{\ent}{0 \leq i < |\textit{ciudades}| \land \textit{ciudades}[i].\textit{habitantes} > 50,000} \land \\
+\hspace*{1.4cm}\paraTodo[unalinea]{i}{\ent}{0 \leq i < |\textit{ciudades}| \implicaLuego \textit{ciudades}[i].\textit{habitantes} \geq 0} \land \\
+\hspace*{1.4cm}\paraTodo[unalinea]{i,j}{\ent}{0 \leq i < |\textit{ciudades}| \land 0 \leq j < \textit{ciudades}| \implicaLuego \textit{ciudades}[i].\textit{nombre} \neq \textit{ciudades}[j].\textit{nombre}}\Big) \\
+$
+
+
+\subsubsection*{Antes del ciclo}
+
+\subsubsection*{2.1.0. $P \implies wp(S_1,P_c) \equiv \{P\}S_1\{P_c\}$}
+
+$wp(S_1,P_c) \equiv wp(res=0,i=0,res=0 \land i=0) \equiv$ 
+
+$wp(res=0,wp(i=0,res=0 \land i=0)) \equiv wp(res=0,res=0 \land 0=0) \equiv$
+
+$ 0 = 0 \land 0 = 0 \equiv True$ 
+ \checkmark
+ 
+\vspace{5mm}
+
+\subsubsection*{Ciclo while (Teorema de correctitud parcial)}
+
+\subsubsection{\textbf{$Pc \implies I:$}}
+
+$\noindent\existe[unalinea]{j}{\ent}{0 \leq j < |\textit{ciudades}| \land \textit{ciudades}[j].\textit{habitantes} > 50000} \land$
+
+
+$\paraTodo[unalinea]{j}{\ent}{0 \leq j < |\textit{ciudades}| \implicaLuego \textit{ciudades}[j].\textit{habitantes} \geq 0} \land$
+
+$\paraTodo[unalinea]{j,k}{\ent}{0 \leq j < k < |\textit{ciudades}|\implicaLuego \textit{ciudades}[j].\textit{nombres} \neq \textit{ciudades}[k].\textit{nombre}} \land$ 
+
+$(res = 0 \land  i = 0) \implicaLuego (0 \leq i \leq |\textit{ciudades}| \land res = \sum_{h=0}^{i-1}\textit{ciudades}[h].\textit{habitantes})$
+
+\vspace{2mm}
+
+$(res = 0, i = 0): 0 \leq 0 \leq |\textit{ciudades}| \land 0 = \sum_{h=0}^{-1}\textit{ciudades}[h].\textit{habitantes} = 0 \equiv True \hspace*{2.5mm} \checkmark$
+
+\subsubsection{\textbf{$\{I\land B\}S\{I\} \iff \{I\land B\} \implies wp(S,\{I\})$}}
+
+$wp(S,{I}) \equiv wp\Big(res:= res + \textit{ciudades}[i].\textit{habitantes}, wp(i=i+1, {I})\Big) \equiv$
+
+$wp\Big(res:= res + \textit{ciudades}[i].\textit{habitantes}, (0 \leq i+1 \leq |\textit{ciudades}| \yLuego res = \sum_{h=0}^{i}\textit{ciudades}[h].\textit{habitantes})\Big) \equiv$
+
+\vspace{0.5mm}
+
+$def(\textit{ciudades}[i].\textit{habitantes}) \yLuego 0 \leq i + 1 \leq |\textit{ciudades}| \yLuego res + \textit{ciudades}[i].\textit{habitantes} = \sum_{h=0}^{i}\textit{ciudades}[h].\textit{habitantes} \equiv$
+
+\vspace{0.5mm}
+
+$0 \leq i < |\textit{ciudades}| \land res = \sum_{h=0}^{i}(\textit{ciudades}[h].\textit{habitantes}) - \textit{ciudades}[i].\textit{habitantes} \equiv$
+
+\vspace{0.5mm}
+
+$0 \leq i < |\textit{ciudades}| \land res = \sum_{h=0}^{i-1}\textit{ciudades}[h].\textit{habitantes}$
+
+\vspace{3mm}
+
+Así: $0 \leq i < |\textit{ciudades}| \land res = \sum_{h=0}^{i-1}\textit{ciudades}[h].\textit{habitantes} \implies (0\leq i<|\textit{ciudades}| \land res = \sum_{h=0}^{i-1}\textit{ciudades}[h].\textit{habitantes}$
+
+\vspace{2mm}
+
+Es siempre verdadero, y por lo tanto $\{I\land B\}S\{I\}$ es una tripla de Hoare válida. \checkmark
+
+
+\subsubsection{\textbf{$I \land \lnot B \implies Q_c$}}
+
+$
+i\geq|\ciu|\land0\leq i\leq |\ciu| \land res = \sum_{h=0}^{i-1}\ciu[h].\hab \implies res = \sum_{i=0}^{|\ciu|-1}\ciu[i].\hab \equiv
+$
+
+$
+i = |\ciu| \land res = \sum_{h=0}^{i-1}\ciu[h].\hab \implies res = \sum_{i=0}^{|\ciu|-1}\ciu[i].\hab \equiv
+$
+
+$
+(i = |\ciu|): res = \sum_{h=0}^{|\ciu|-1}\ciu[h].\hab \implies res = \sum_{i=0}^{|\ciu|-1}\ciu[i].\hab
+$
+\vspace{2mm}
+
+Es siempre verdadero, y por lo tanto $I \land \lnot B \implies Q_c$ \checkmark
+
+\subsubsection*{Finalización del while (Teorema de terminación)}
+
+\subsubsection{$\{I \land B \land f_v = v_0\} S \{f_v<v_0\}$}
+Con $f_v$ = $\fvariante$
+
+\vspace{2mm}
+
+$\{I \land B \land f_v = v_0\} S \{f_v<v_0\} \iff \{I \land B \land f_v = v_0\} \implies wp(S,\{f_v<v_0\})$
+
+$
+wp(S,\{f_v<v_0\}) \equiv wp\Big(res := res + \ciu[i].\hab, wp(i := i+1, \fvariante < v_0)\Big) \equiv
+$
+
+$
+wp(res+\ciu[i].\hab, |\ciu| - i - 1 < v_0) \equiv def(\ciu[i].\hab) \yLuego |\ciu|-i-1< v_0 \equiv
+$
+
+$
+0 \leq i < |\ciu| \yLuego |\ciu|- i -1<v_0
+$
+
+Así, $wp(S,\{f_v<v_0\}) \equiv 0 \leq i < |\ciu| \yLuego |\ciu|- i - 1<v_0$
+
+\vspace{4mm}
+
+Nos queda ver $\{I \land B \land f_v = v_0\}$, que ya están calculados:
+
+$\{I \land B \land f_v = v_o\} \equiv \invariante \land \B \land \fvariante = v_0$
+
+\hspace*{2.7cm} \equiv $(0 \leq i < |\ciu| \land (|\ciu| - i = v_0) \yLuego res = \sum_{j=0}^{i-1}\ciu[j].\hab)$
+
+\vspace{4mm}
+
+Ahora, verifiquemos si $\{I \land B \land f_v = v_0\} \implies wp(S,\{f_v<v_0\})$ vale:
+
+\vspace{2mm}
+$v_0 = \fvariante$
+
+
+\vspace{4mm}
+
+$(0 \leq i < |\ciu| \land \fvariante = v_0 \yLuego res = \sum_{j=0}^{i-1}\ciu[j].\hab) \implies$
+
+$ (0 \leq i < |\ciu| \yLuego |\ciu| -i-1 < v_0)$
+
+\vspace{2mm}
+
+Si en antecedente es verdadero, en particular vale que:
+
+$(0 \leq i < |\ciu| \yLuego |\ciu| -i-1 < v_0) \equiv (|\ciu| - i) - 1 < v_0 \equiv v_0 - 1 < v_0 \equiv 0 < 1 \equiv True$ \checkmark  
+
+\subsubsection{$I \land f_v \leq 0 \implies \lnot B$}
+
+$I \land f_v \leq 0 \implies \lnot B \equiv 0 \leq i \leq |\ciu| \land |\ciu| - i \leq 0 \implies i \geq |\ciu|$
+
+\hspace{3.13cm}$\equiv 0 \leq i \leq |\ciu| \land i \geq |\ciu| \implies i \geq |\ciu|$
+
+\hspace{3.13cm}$\equiv i = |\ciu| \implies i \geq |\ciu|$ 
+
+\vspace{2mm}
+
+Si el antecedente es falso, el consecuente es verdadero.
+
+Si el antecedente es verdadero, es decir $i=|\ciu|$, tenemos que $|\ciu| \geq |\ciu|$ es verdadero.
+
+\vspace{2mm}
+
+Luego $I \land f_v \leq 0 \implies \lnot B$ \checkmark
+
+
+
+
+
+
 \subsection{}
+
+% 
+% Que es equivalente (reemplazando $v_0$) a:
+% 
+% \vspace{2mm}
+% 
+% $(0 \leq i \leq |\ciu| \land (|\ciu| + 1 - i) \yLuego res = \sum_{j=0}^{i-1}\ciu[j].\hab)$
+% 
+% $
+% \implies (0 \leq i < |\ciu| \yLuego |\ciu|-1< (0 \leq i \leq |\ciu| % \land (|\ciu| + 1 - i) \yLuego res = \sum_{j=0}^{i-1}\ciu[j].\hab)) 
+% $
+
+
+
+
+\vspace{4cm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -240,7 +482,13 @@ Con la siguiente implementación:
 \pred{predSuelto}{parametros}{\paraTodo[unalinea]{variable}{tipo}{algo \implicaLuego expresion}}
 \pred{predSuelto}{parametros}{\existe[unalinea]{variable}{tipo}{algo \yLuego expresion}}
 
+\vspace{1cm}
 
+
+
+\invariante
+
+\fvariante
 
 \vspace{10cm}
 

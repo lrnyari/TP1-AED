@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1725922823.09264 "c:/Users/lisan/Desktop/Lisandro/FQ/AED/TP1/main.tex" "main.pdf" "main" 1725922826.81482 0
+["pdflatex"] 1725923789.32216 "c:/Users/lisan/Desktop/Lisandro/FQ/AED/TP1/main.tex" "main.pdf" "main" 1725923792.99893 2
   "AEDmacros.tex" 1725754156 5046 a29b5124b00f3f425c63e9a9999700f1 ""
   "C:/Users/lisan/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1725922165 81068 299f700eb05b1217173e62b88b513bd0 ""
   "C:/Users/lisan/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1725743675 24265373 b1159396cd1f00417599961d5dfe7998 ""
@@ -74,12 +74,12 @@
   "C:/Users/lisan/AppData/Local/Programs/MiKTeX/tex/latex/listings/lstlang1.sty" 1716806137 206518 454797549fee16d9163752cdce1d96e1 ""
   "C:/Users/lisan/AppData/Local/Programs/MiKTeX/tex/latex/listings/lstmisc.sty" 1716806137 77023 71dc8ec77fb5648c3af15ec4b791f591 ""
   "C:/Users/lisan/AppData/Local/Programs/MiKTeX/tex/latex/listings/lstpatch.sty" 1716806137 353 9024412f43e92cd5b21fe9ded82d0610 ""
-  "c:/Users/lisan/Desktop/Lisandro/FQ/AED/TP1/main.tex" 1725922814 11912 fe148cb674056620790d23ae93b6ca0a ""
+  "c:/Users/lisan/Desktop/Lisandro/FQ/AED/TP1/main.tex" 1725923779 12029 a4856066b93ac9d5f8896eaa8c14e954 ""
   "caratula.sty" 1725754156 11307 b7d6c7f15260a7fe039ae1559c1c577c ""
   "logo_dc.jpg" 1725754156 128041 860ed529f2e122b3922f6ce21e3273f1 ""
   "logo_uba.jpg" 1725754156 229119 10f3a63be47e1e95e44f30008ec3af50 ""
-  "main.aux" 1725922825 1198 5e0493361f6c1810ecc23fdd549a1ff5 "pdflatex"
-  "main.tex" 1725922814 11912 fe148cb674056620790d23ae93b6ca0a ""
+  "main.aux" 1725923791 1225 79a63f150e83a29fa11f0857b62c2dcf "pdflatex"
+  "main.tex" 1725923779 12029 a4856066b93ac9d5f8896eaa8c14e954 ""
   (generated)
   "main.aux"
   "main.log"
